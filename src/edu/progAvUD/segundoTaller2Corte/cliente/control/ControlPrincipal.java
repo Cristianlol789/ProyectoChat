@@ -10,12 +10,36 @@ package edu.progAvUD.segundoTaller2Corte.cliente.control;
  */
 public class ControlPrincipal {
     
-    ControlGrafico controlGrafico;
+    private ControlGrafico controlGrafico;
+    private ControlCliente controlCliente;
 
     public ControlPrincipal() {
         controlGrafico = new ControlGrafico(this);
     }
     
+    public ControlGrafico getControlGrafico() {
+        return controlGrafico;
+    }
     
+    public ControlCliente getControlCliente() {
+        return controlCliente;
+    }
     
+    public void setControlCliente(ControlCliente controlCliente) {
+        this.controlCliente = controlCliente;
+    }
+    
+    // Methods to delegate UI updates to ControlGrafico / VentanaPrincipal
+    
+    public void mostrarMensajeEnPanelPrincipal(String mensaje) {
+        controlGrafico.mostrarMensajeEnPanelPrincipal(mensaje);
+    }
+    
+    public void actualizarListaUsuarios(String[] usuarios) {
+        controlGrafico.actualizarListaUsuarios(usuarios);
+    }
+    
+    public void mostrarPanelPrivado(String amigo, String mensaje) {
+        controlGrafico.mostrarPanelPrivado(amigo, mensaje);
+    }
 }

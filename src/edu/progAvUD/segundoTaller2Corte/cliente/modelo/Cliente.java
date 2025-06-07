@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edu.progAvUD.segundoTaller2Corte.cliente.modelo;
+
+import java.io.DataInputStream;
 
 /**
  *
@@ -13,12 +11,14 @@ public class Cliente {
     private static String ipServer;
     private String nombreCliente;
     private String nombreUsuario;
+    private DataInputStream entrada;
 
-    public Cliente(String nombreCliente, String nombreUsuario) {
+    public Cliente(String nombreCliente, String nombreUsuario, DataInputStream entrada) {
         this.nombreCliente = nombreCliente;
         this.nombreUsuario = nombreUsuario;
+        this.entrada = entrada;
     }
-
+    
     public static String getIpServer() {
         return ipServer;
     }
@@ -42,7 +42,13 @@ public class Cliente {
     public void setNombreUsuario(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
     }
-    
-    
-    
+
+    public DataInputStream getEntrada() {
+        return entrada;
+    }
+
+    public void setEntrada(DataInputStream entrada) {
+        this.entrada = entrada;
+    }
+
 }

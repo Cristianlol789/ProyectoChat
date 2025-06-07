@@ -1,27 +1,68 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package edu.progAvUD.segundoTaller2Corte.cliente.vista;
 
+import edu.progAvUD.segundoTaller2Corte.cliente.control.ControlGrafico;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Andres Felipe
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
+    
+    private ControlGrafico controlGrafico;
+    public PanelPrincipal panelPrincipal;
+    public PanelAyuda panelAyuda;
+    public PanelPrivado panelPrivado;
+    
+    public VentanaPrincipal(ControlGrafico controlGrafico) {
+        setVisible(true);
+        initComponents();
+        this.controlGrafico = controlGrafico;
+        this.panelPrincipal = new PanelPrincipal();
+        this.panelAyuda = new PanelAyuda();
+        this.panelPrivado = new PanelPrivado();
+    }
 
     /**
-     * Creates new form VentanaPrincipal
+     * Muestra un cuadro de diálogo con un mensaje de éxito.
+     *
+     * @param mensaje Mensaje a mostrar al usuario.
      */
-    public VentanaPrincipal() {
-        initComponents();
-        setVisible(true);
+    public void mostrarMensajeExito(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Muestra un cuadro de diálogo con un mensaje de error.
+     *
+     * @param mensaje Mensaje a mostrar al usuario.
+     */
+    public void mostrarMensajeError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Cambia el contenido visible de la ventana principal por el panel
+     * recibido. Ajusta el tamaño, centra la ventana y refresca la interfaz para
+     * reflejar el cambio.
+     *
+     * @param panel Panel que se desea mostrar en la ventana principal.
+     */
+    public void mostrarPanel(JPanel panel) {
+        setContentPane(panel);
+        pack(); // Ajusta el tamaño de la ventana según el contenido
+        setLocationRelativeTo(null); // Centra la ventana en la pantalla
+        revalidate(); // Refresca el layout
+        repaint(); // Redibuja la ventana
     }
     
     public String pedirIPServer(){
         return JOptionPane.showInputDialog("Introducir IP_SERVER :","localhost");
+    }
+    
+    public void mostrarAcera(){
+        JOptionPane.showMessageDialog(this, "José Valdez/Javier Vargas", "Desarrollado por", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
