@@ -23,6 +23,8 @@ public class ControlGrafico implements ActionListener{
         
         ventanaPrincipal.mostrarPanel(ventanaPrincipal.panelConsolaServidor);
         ventanaPrincipal.setVisible(true);
+        
+        
     }
 
     

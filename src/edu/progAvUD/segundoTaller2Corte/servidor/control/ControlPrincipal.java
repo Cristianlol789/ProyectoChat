@@ -14,10 +14,14 @@ public class ControlPrincipal {
     private ControlServidor controlServidor;
     
     public ControlPrincipal() {
-        this.controlGrafico = new ControlGrafico(this);
-        this.controlServidor = new ControlServidor(this);
         
+        this.controlServidor = new ControlServidor(this);
+        this.controlGrafico = new ControlGrafico(this);
+        
+        controlServidor.runServer();
     }
+    
+    
     
     public void mostrarMensajeConsolaServidor(String mensaje){
         controlGrafico.mostrarMensajeConsolaServidor(mensaje);

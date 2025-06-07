@@ -7,6 +7,7 @@ package edu.progAvUD.segundoTaller2Corte.servidor.control;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Vector;
 
 /**
  *
@@ -15,7 +16,8 @@ import java.net.Socket;
 public class ControlServidor {
 
     private ControlPrincipal controlPrincipal;
-
+    public static Vector<ServidorHilo> clientesActivos = new Vector();
+    
     public ControlServidor(ControlPrincipal controlPrincipal) {
         this.controlPrincipal = controlPrincipal;
     }
@@ -40,11 +42,28 @@ public class ControlServidor {
                     controlPrincipal.mostrarMensajeConsolaServidor("Accept failed: " + server1 + ", " + e.getMessage());
                     continue;
                 }
-                
+                ServidorHilo usuario = new ServidorHilo(socket1, socket2, this);
+                clientesActivos.add(usuario);
+                controlPrincipal.mostrarMensajeConsolaServidor("cliente agregado:" + usuario);
+                usuario.start();
             }
         } catch (IOException e) {
-            controlPrincipal.mostrarMensajeConsolaServidor("error :" + e);
+            e.printStackTrace();
+            //controlPrincipal.mostrarMensajeConsolaServidor("error :" + e);
         }
     }
 
+    public void mostrarMensajeConsolaServidor(String mensaje){
+        controlPrincipal.mostrarMensajeConsolaServidor(mensaje);
+    }
+
+    public static Vector<ServidorHilo> getClientesActivos() {
+        return clientesActivos;
+    }
+
+    public static void setClientesActivos(Vector<ServidorHilo> clientesActivos) {
+        ControlServidor.clientesActivos = clientesActivos;
+    }
+    
+    
 }

@@ -6,9 +6,7 @@ package edu.progAvUD.segundoTaller2Corte.servidor.modelo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  *
@@ -16,73 +14,41 @@ import java.util.ArrayList;
  */
 public class Servidor {
 
-    private ServerSocket servidorEntrada1;
-    private ServerSocket servidorEntrada2;
-    private Socket servidorSalida1;
-    private Socket servidorSalida2;
+    private Socket servidorCliente1;
+    private Socket servidorCliente2;
     
     private DataInputStream servidorInformacionEntrada1;
     private DataOutputStream servidorInformacionSalida1;
     private DataOutputStream servidorInformacionSalida2;
     
     private String nombreUsuario;
-    private ArrayList<String> usuarios;
-    private boolean servidorEscuchando;
 
-    public Servidor(ServerSocket servidorEntrada1, ServerSocket servidorEntrada2, Socket servidorSalida1, Socket servidorSalida2, DataInputStream servidorInformacionEntrada1, DataOutputStream servidorInformacionSalida1, DataOutputStream servidorInformacionSalida2, ArrayList<String> usuarios, boolean servidorEscuchando) {
-        this.servidorEntrada1 = servidorEntrada1;
-        this.servidorEntrada2 = servidorEntrada2;
-        this.servidorSalida1 = servidorSalida1;
-        this.servidorSalida2 = servidorSalida2;
-        this.servidorInformacionEntrada1 = servidorInformacionEntrada1;
-        this.servidorInformacionSalida1 = servidorInformacionSalida1;
-        this.servidorInformacionSalida2 = servidorInformacionSalida2;
-        this.usuarios = usuarios;
-        this.servidorEscuchando = servidorEscuchando;
-    }
-
-    public Servidor(ServerSocket servidorEntrada1, ServerSocket servidorEntrada2, String nombreUsuario) {
-        this.servidorEntrada1 = servidorEntrada1;
-        this.servidorEntrada2 = servidorEntrada2;
+    public Servidor(Socket servidorCliente1, Socket servidorCliente2, String nombreUsuario) {
+        this.servidorCliente1 = servidorCliente1;
+        this.servidorCliente2 = servidorCliente2;
         this.nombreUsuario = nombreUsuario;
     }
 
     
     
+    public Socket getServidorCliente1() {
+        return servidorCliente1;
+    }
+
+    public void setServidorCliente1(Socket servidorCliente1) {
+        this.servidorCliente1 = servidorCliente1;
+    }
+
+    public Socket getServidorCliente2() {
+        return servidorCliente2;
+    }
+
+    public void setServidorCliente2(Socket servidorCliente2) {
+        this.servidorCliente2 = servidorCliente2;
+    }
+
     
-
-    public ServerSocket getServidorEntrada1() {
-        return servidorEntrada1;
-    }
-
-    public void setServidorEntrada1(ServerSocket servidorEntrada1) {
-        this.servidorEntrada1 = servidorEntrada1;
-    }
-
-    public ServerSocket getServidorEntrada2() {
-        return servidorEntrada2;
-    }
-
-    public void setServidorEntrada2(ServerSocket servidorEntrada2) {
-        this.servidorEntrada2 = servidorEntrada2;
-    }
-
-    public Socket getServidorSalida1() {
-        return servidorSalida1;
-    }
-
-    public void setServidorSalida1(Socket servidorSalida1) {
-        this.servidorSalida1 = servidorSalida1;
-    }
-
-    public Socket getServidorSalida2() {
-        return servidorSalida2;
-    }
-
-    public void setServidorSalida2(Socket servidorSalida2) {
-        this.servidorSalida2 = servidorSalida2;
-    }
-
+    
     public DataInputStream getServidorInformacionEntrada1() {
         return servidorInformacionEntrada1;
     }
@@ -105,22 +71,6 @@ public class Servidor {
 
     public void setServidorInformacionSalida2(DataOutputStream servidorInformacionSalida2) {
         this.servidorInformacionSalida2 = servidorInformacionSalida2;
-    }
-
-    public ArrayList<String> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(ArrayList<String> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public boolean isServidorEscuchando() {
-        return servidorEscuchando;
-    }
-
-    public void setServidorEscuchando(boolean servidorEscuchando) {
-        this.servidorEscuchando = servidorEscuchando;
     }
 
     public String getNombreUsuario() {
