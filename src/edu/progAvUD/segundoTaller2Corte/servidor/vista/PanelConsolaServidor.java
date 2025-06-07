@@ -1,17 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package edu.progAvUD.segundoTaller2Corte.servidor.vista;
 
 /**
- *
+ * Panel de consola para el servidor.
+ * 
+ * Esta clase representa un panel gráfico que forma parte de la interfaz del servidor.
+ * Su propósito puede incluir mostrar información de log, mensajes o controles de la consola del servidor.
+ * 
+ * Extiende {@code javax.swing.JPanel} y se inicializa con los componentes definidos en el método {@code initComponents()}.
+ * 
  * @author Andres Felipe
  */
+
 public class PanelConsolaServidor extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelConsolaServidor
+     * Constructor del panel de consola del servidor.
+     * Inicializa los componentes gráficos definidos en el formulario.
      */
     public PanelConsolaServidor() {
         initComponents();

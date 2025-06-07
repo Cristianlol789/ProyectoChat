@@ -1,34 +1,42 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package edu.progAvUD.segundoTaller2Corte.servidor.vista;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- *
+ * Clase que representa la ventana principal de la aplicación del servidor.
+ * 
+ * Esta ventana puede cambiar su contenido dinámicamente para mostrar distintos paneles,
+ * como el panel de consola del servidor. También permite mostrar mensajes de éxito o error
+ * al usuario mediante cuadros de diálogo.
+ * 
+ * Extiende {@code javax.swing.JFrame}.
+ * 
  * @author Andres Felipe
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
+    /** Panel de consola del servidor que muestra mensajes del sistema */
     public PanelConsolaServidor panelConsolaServidor;
-    
-    
+
     /**
-     * Creates new form VentanaPrincipal
+     * Constructor que crea e inicializa la ventana principal.
+     * También inicializa el panel de consola del servidor.
      */
     public VentanaPrincipal() {
         initComponents();
         this.panelConsolaServidor = new PanelConsolaServidor();
     }
-    
-    public void mostrarMensajeConsolaServidor(String mensaje){
-        panelConsolaServidor.jTextAreaConsola.append(mensaje+ "\n");
+
+    /**
+     * Muestra un mensaje en el área de texto de la consola del servidor.
+     * 
+     * @param mensaje Texto que se desea añadir al log de la consola.
+     */
+    public void mostrarMensajeConsolaServidor(String mensaje) {
+        panelConsolaServidor.jTextAreaConsola.append(mensaje + "\n");
     }
-    
-    
+
     /**
      * Muestra un cuadro de diálogo con un mensaje de éxito.
      *
@@ -48,9 +56,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     /**
-     * Cambia el contenido visible de la ventana principal por el panel
-     * recibido. Ajusta el tamaño, centra la ventana y refresca la interfaz para
-     * reflejar el cambio.
+     * Cambia el panel visible en la ventana principal.
+     * Ajusta el tamaño, centra la ventana en pantalla y actualiza la interfaz gráfica.
      *
      * @param panel Panel que se desea mostrar en la ventana principal.
      */
@@ -61,7 +68,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         revalidate(); // Refresca el layout
         repaint(); // Redibuja la ventana
     }
-    
     
     /**
      * This method is called from within the constructor to initialize the form.
