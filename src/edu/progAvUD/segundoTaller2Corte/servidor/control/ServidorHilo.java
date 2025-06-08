@@ -35,6 +35,9 @@ public class ServidorHilo extends Thread {
         "carajo", "mierda", "joder", "coño", "pendejo", "pendeja", "cabron", "cabrona", "hijo de puta", "hija de puta", "puta", "puto", "gilipollas", "imbécil", "imbecil", "malparido", "malparida", "culero", "culera", "estúpido", "estúpida", "mamón", "mamona", "boludo", "boluda", "pelotudo", "pelotuda", "zorra", "perra", "baboso", "babosa", "chinga tu madre", "pinche", "maricón", "maricona", "marica", "verga", "chingada", "chingado", "cojudo", "cojuda", "idiota", "tarado", "tarada", "tonto", "tonta", "mierdoso", "mierdosa", "culiao", "culiá", "culiador", "culiadora", "concha", "forro", "forra", "pajero", "pajera", "ñero", "ñera", "culicagado", "culicagada", "güevón", "güevona", "mamaguevo", "mamagueva", "gonorrea", "gonorreta", "careverga", "carechimba", "malnacido", "malnacida", "come mierda", "tragaleche", "pichón", "pichona", "putona", "putón", "bastardo", "bastarda", "pervertido", "pervertida", "asqueroso", "asquerosa", "cagada", "cagado", "cochina", "cochino", "infeliz", "sucia", "sucio", "machorra", "pirobo", "piroba", "loca", "loco", "petardo", "petarda", "mierdín", "mierdina", "carapicha", "carapicho", "soplapollas", "chupapijas", "sarna", "apestoso", "apestosa", "degenerado", "degenerada", "desgraciado", "desgraciada", "desubicado", "desubicada", "imbesil", "tarúpido", "tarúpida"
     };
 
+    private int advertencias = 0;
+    private static final int MAX_ADVERTENCIAS = 3;
+
     /**
      * Constructor del hilo servidor que inicia la conexión con los clientes.
      *
@@ -81,14 +84,24 @@ public class ServidorHilo extends Thread {
         while (true) {
             try {
                 opcion = this.servidor.getServidorInformacionEntrada1().readInt();
-                String mencli2;
+
                 switch (opcion) {
                     case 1: // Enviar mensaje a todos los clientes
                         mencli = this.servidor.getServidorInformacionEntrada1().readUTF();
-                        mencli2 = censorMessage(mencli);
-                        controlServidor.mostrarMensajeConsolaServidor("Mensaje recibido: " + mencli);
-                        enviaMsg(mencli2);
+                        controlServidor.mostrarMensajeConsolaServidor("Mensaje recibido de " + servidor.getNombreUsuario() + ": " + mencli);
+
+                        // Censurar mensaje y verificar si el usuario debe ser baneado
+                        String mensajeCensurado = censorMessage(mencli);
+
+                        // Si censorMessage retorna null, significa que el usuario fue baneado
+                        if (mensajeCensurado == null) {
+                            return; // Terminar el hilo
+                        }
+
+                        // Enviar mensaje censurado a todos los usuarios
+                        enviaMsg(mensajeCensurado);
                         break;
+
                     case 2: // Enviar lista de usuarios activos
                         int numUsers = ControlServidor.getClientesActivos().size();
                         this.servidor.getServidorInformacionSalida1().writeInt(numUsers);
@@ -98,15 +111,26 @@ public class ServidorHilo extends Thread {
                             );
                         }
                         break;
+
                     case 3: // Enviar mensaje privado a un amigo
                         amigo = this.servidor.getServidorInformacionEntrada1().readUTF();
                         mencli = this.servidor.getServidorInformacionEntrada1().readUTF();
-                        mencli2 = censorMessage(mencli);
-                        enviaMsg(amigo, mencli2);
+                        controlServidor.mostrarMensajeConsolaServidor("Mensaje privado de " + servidor.getNombreUsuario() + " para " + amigo + ": " + mencli);
+
+                        // Censurar mensaje privado
+                        String mensajePrivadoCensurado = censorMessage(mencli);
+
+                        // Si censorMessage retorna null, significa que el usuario fue baneado
+                        if (mensajePrivadoCensurado == null) {
+                            return; // Terminar el hilo
+                        }
+
+                        // Enviar mensaje privado censurado
+                        enviaMsg(amigo, mensajePrivadoCensurado);
                         break;
                 }
             } catch (IOException e) {
-                controlServidor.mostrarMensajeConsolaServidor("El cliente terminó la conexión");
+                controlServidor.mostrarMensajeConsolaServidor("El cliente " + servidor.getNombreUsuario() + " terminó la conexión");
                 break;
             }
         }
@@ -121,16 +145,20 @@ public class ServidorHilo extends Thread {
         }
     }
 
-    private String censorMessage(String message) {
-        String[] words = message.split("\\s+");
-        for (int i = 0; i < words.length; i++) {
-            for (String badWord : malasPalabras) {
-                if (words[i].equalsIgnoreCase(badWord)) {
-                    words[i] = words[i].replaceAll(".", "*");
+    /**
+     * Notifica a todos los usuarios activos que alguien se desconectó
+     */
+    private void notificarDesconexion() {
+        for (ServidorHilo user : ControlServidor.getClientesActivos()) {
+            if (user != this) {
+                try {
+                    user.getServidor().getServidorInformacionSalida2().writeInt(5); // Nuevo código para desconexión
+                    user.getServidor().getServidorInformacionSalida2().writeUTF(this.servidor.getNombreUsuario() + " se ha desconectado");
+                } catch (IOException e) {
+                    controlServidor.mostrarMensajeConsolaServidor("Error notificando desconexión: " + e.getMessage());
                 }
             }
         }
-        return String.join(" ", words);
     }
 
     /**
@@ -210,5 +238,79 @@ public class ServidorHilo extends Thread {
      */
     public void setServidor(Servidor servidor) {
         this.servidor = servidor;
+    }
+
+    private String censorMessage(String message) throws IOException {
+        String[] words = message.split("\\s+");
+        boolean containsBadWord = false;
+        StringBuilder censurado = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            String cleanWord = words[i].replaceAll("[^a-zA-ZáéíóúÁÉÍÓÚñÑ]", "").toLowerCase();
+            boolean esMalaPalabra = false;
+
+            for (String badWord : malasPalabras) {
+                if (cleanWord.equalsIgnoreCase(badWord)) {
+                    containsBadWord = true;
+                    esMalaPalabra = true;
+                    break;
+                }
+            }
+
+            if (esMalaPalabra) {
+                // Censurar la palabra con asteriscos
+                censurado.append("*".repeat(words[i].length())).append(" ");
+            } else {
+                censurado.append(words[i]).append(" ");
+            }
+        }
+
+        if (containsBadWord) {
+            advertencias++;
+            controlServidor.mostrarMensajeConsolaServidor("Advertencia " + advertencias + "/" + MAX_ADVERTENCIAS + " para usuario: " + servidor.getNombreUsuario());
+
+            if (advertencias >= MAX_ADVERTENCIAS) {
+                // Banear después de 3 advertencias
+                banearUsuario("Has sido baneado por uso repetido de lenguaje inapropiado.");
+                return null;
+            } else {
+                // Enviar advertencia al usuario
+                try {
+                    this.servidor.getServidorInformacionSalida2().writeInt(6); // Nuevo código para advertencia
+                    this.servidor.getServidorInformacionSalida2().writeUTF("Advertencia " + advertencias + "/" + MAX_ADVERTENCIAS + ": Evita usar lenguaje inapropiado.");
+                    this.servidor.getServidorInformacionSalida2().flush();
+                } catch (IOException e) {
+                    controlServidor.mostrarMensajeConsolaServidor("Error enviando advertencia: " + e.getMessage());
+                }
+            }
+
+            return censurado.toString().trim(); // Retornar mensaje censurado
+        }
+
+        return message; // Retornar mensaje original
+    }
+
+    private void banearUsuario(String razon) {
+        controlServidor.mostrarMensajeConsolaServidor("Usuario baneado: " + servidor.getNombreUsuario() + " - Razón: " + razon);
+
+        try {
+            this.servidor.getServidorInformacionSalida2().writeInt(4);
+            this.servidor.getServidorInformacionSalida2().writeUTF(razon);
+            this.servidor.getServidorInformacionSalida2().flush();
+
+            notificarDesconexion();
+
+        } catch (IOException e) {
+            controlServidor.mostrarMensajeConsolaServidor("Error enviando mensaje de baneo: " + e.getMessage());
+        } finally {
+            ControlServidor.getClientesActivos().removeElement(this);
+
+            try {
+                this.servidor.getServidorCliente1().close();
+                this.servidor.getServidorCliente2().close();
+            } catch (IOException e) {
+                controlServidor.mostrarMensajeConsolaServidor("Error cerrando conexiones: " + e.getMessage());
+            }
+        }
     }
 }

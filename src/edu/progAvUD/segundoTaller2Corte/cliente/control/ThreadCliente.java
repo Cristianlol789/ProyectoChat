@@ -35,9 +35,23 @@ public class ThreadCliente extends Thread {
                         mensaje = entrada.readUTF();
                         controlCliente.mostrarMensajePrivado(amigo, mensaje);
                         break;
+                    case 4: // ban message
+                        mensaje = entrada.readUTF();
+                        controlCliente.mostrarMensajeError("BANEADO: " + mensaje);
+                        controlCliente.cerrarConexiones();
+                        System.exit(0);
+                        break;
+                    case 5: // notificación de desconexión de usuario
+                        mensaje = entrada.readUTF();
+                        controlCliente.mostarMensaje("Sistema: " + mensaje);
+                        break;
+                    case 6: // advertencia por lenguaje inapropiado
+                        mensaje = entrada.readUTF();
+                        controlCliente.mostrarMensajeError("ADVERTENCIA: " + mensaje);
+                        break;
                 }
             } catch (IOException e) {
-                controlCliente.mostrarMensajeError("Error en la comunicación. Información para el usuario");
+                controlCliente.mostrarMensajeError("Error en la comunicación con el servidor");
                 break;
             }
         }

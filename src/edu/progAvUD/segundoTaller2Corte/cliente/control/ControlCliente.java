@@ -129,8 +129,8 @@ public class ControlCliente {
     public void mostrarMensajePrivado(String amigo, String mensaje) {
         controlPrincipal.mostrarMensajePrivado(amigo, mensaje);
     }
-    
-    public void mostrarMensajeError(String mensaje){
+
+    public void mostrarMensajeError(String mensaje) {
         controlPrincipal.mostrarMensajeError(mensaje);
     }
 }
