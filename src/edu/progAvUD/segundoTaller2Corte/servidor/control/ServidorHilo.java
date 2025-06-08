@@ -8,28 +8,40 @@ import java.net.Socket;
 
 /**
  * Hilo que gestiona la comunicación entre un servidor y un cliente.
- * 
- * Este hilo recibe mensajes del cliente, los interpreta y realiza acciones como:
- * enviar mensajes a todos los clientes, a un cliente específico o actualizar la lista de usuarios activos.
- * 
- * Se apoya en la clase {@code ControlServidor} para gestionar la lista de clientes activos
- * y actualizar la interfaz del servidor.
- * 
+ *
+ * Este hilo recibe mensajes del cliente, los interpreta y realiza acciones
+ * como: enviar mensajes a todos los clientes, a un cliente específico o
+ * actualizar la lista de usuarios activos.
+ *
+ * Se apoya en la clase {@code ControlServidor} para gestionar la lista de
+ * clientes activos y actualizar la interfaz del servidor.
+ *
  * @author Andres Felipe
  */
 public class ServidorHilo extends Thread {
 
-    /** Objeto que representa la conexión con el cliente */
+    /**
+     * Objeto que representa la conexión con el cliente
+     */
     private Servidor servidor;
 
-    /** Controlador principal del servidor para acceder a la consola y a la lista de usuarios */
+    /**
+     * Controlador principal del servidor para acceder a la consola y a la lista
+     * de usuarios
+     */
     private ControlServidor controlServidor;
+
+    private static final String[] malasPalabras = {
+        "carajo", "mierda", "joder", "coño", "pendejo", "pendeja", "cabron", "cabrona", "hijo de puta", "hija de puta", "puta", "puto", "gilipollas", "imbécil", "imbecil", "malparido", "malparida", "culero", "culera", "estúpido", "estúpida", "mamón", "mamona", "boludo", "boluda", "pelotudo", "pelotuda", "zorra", "perra", "baboso", "babosa", "chinga tu madre", "pinche", "maricón", "maricona", "marica", "verga", "chingada", "chingado", "cojudo", "cojuda", "idiota", "tarado", "tarada", "tonto", "tonta", "mierdoso", "mierdosa", "culiao", "culiá", "culiador", "culiadora", "concha", "forro", "forra", "pajero", "pajera", "ñero", "ñera", "culicagado", "culicagada", "güevón", "güevona", "mamaguevo", "mamagueva", "gonorrea", "gonorreta", "careverga", "carechimba", "malnacido", "malnacida", "come mierda", "tragaleche", "pichón", "pichona", "putona", "putón", "bastardo", "bastarda", "pervertido", "pervertida", "asqueroso", "asquerosa", "cagada", "cagado", "cochina", "cochino", "infeliz", "sucia", "sucio", "machorra", "pirobo", "piroba", "loca", "loco", "petardo", "petarda", "mierdín", "mierdina", "carapicha", "carapicho", "soplapollas", "chupapijas", "sarna", "apestoso", "apestosa", "degenerado", "degenerada", "desgraciado", "desgraciada", "desubicado", "desubicada", "imbesil", "tarúpido", "tarúpida"
+    };
 
     /**
      * Constructor del hilo servidor que inicia la conexión con los clientes.
      *
-     * @param socketCliente1 Socket de comunicación para entrada/salida del cliente.
-     * @param socketCliente2 Socket adicional para enviar mensajes desde el servidor.
+     * @param socketCliente1 Socket de comunicación para entrada/salida del
+     * cliente.
+     * @param socketCliente2 Socket adicional para enviar mensajes desde el
+     * servidor.
      * @param controlServidor Referencia al controlador general del servidor.
      */
     public ServidorHilo(Socket socketCliente1, Socket socketCliente2, ControlServidor controlServidor) {
@@ -39,8 +51,8 @@ public class ServidorHilo extends Thread {
     }
 
     /**
-     * Método que se ejecuta cuando se inicia el hilo.
-     * Establece los flujos de entrada/salida y maneja el ciclo de escucha del cliente.
+     * Método que se ejecuta cuando se inicia el hilo. Establece los flujos de
+     * entrada/salida y maneja el ciclo de escucha del cliente.
      */
     @Override
     public void run() {
@@ -69,26 +81,28 @@ public class ServidorHilo extends Thread {
         while (true) {
             try {
                 opcion = this.servidor.getServidorInformacionEntrada1().readInt();
-
+                String mencli2;
                 switch (opcion) {
                     case 1: // Enviar mensaje a todos los clientes
                         mencli = this.servidor.getServidorInformacionEntrada1().readUTF();
+                        mencli2 = censorMessage(mencli);
                         controlServidor.mostrarMensajeConsolaServidor("Mensaje recibido: " + mencli);
-                        enviaMsg(mencli);
+                        enviaMsg(mencli2);
                         break;
                     case 2: // Enviar lista de usuarios activos
                         int numUsers = ControlServidor.getClientesActivos().size();
                         this.servidor.getServidorInformacionSalida1().writeInt(numUsers);
                         for (int i = 0; i < numUsers; i++) {
                             this.servidor.getServidorInformacionSalida1().writeUTF(
-                                ControlServidor.getClientesActivos().get(i).getServidor().getNombreUsuario()
+                                    ControlServidor.getClientesActivos().get(i).getServidor().getNombreUsuario()
                             );
                         }
                         break;
                     case 3: // Enviar mensaje privado a un amigo
                         amigo = this.servidor.getServidorInformacionEntrada1().readUTF();
                         mencli = this.servidor.getServidorInformacionEntrada1().readUTF();
-                        enviaMsg(amigo, mencli);
+                        mencli2 = censorMessage(mencli);
+                        enviaMsg(amigo, mencli2);
                         break;
                 }
             } catch (IOException e) {
@@ -107,16 +121,30 @@ public class ServidorHilo extends Thread {
         }
     }
 
+    private String censorMessage(String message) {
+        String[] words = message.split("\\s+");
+        for (int i = 0; i < words.length; i++) {
+            for (String badWord : malasPalabras) {
+                if (words[i].equalsIgnoreCase(badWord)) {
+                    words[i] = words[i].replaceAll(".", "*");
+                }
+            }
+        }
+        return String.join(" ", words);
+    }
+
     /**
-     * Envía el nombre del nuevo usuario a todos los usuarios activos, 
-     * para que lo agreguen a sus listas.
+     * Envía el nombre del nuevo usuario a todos los usuarios activos, para que
+     * lo agreguen a sus listas.
      */
     public void enviaUserActivos() {
         ServidorHilo user;
         for (int i = 0; i < ControlServidor.getClientesActivos().size(); i++) {
             try {
                 user = ControlServidor.getClientesActivos().get(i);
-                if (user == this) continue; // No se envía a sí mismo
+                if (user == this) {
+                    continue; // No se envía a sí mismo
+                }
                 user.getServidor().getServidorInformacionSalida2().writeInt(2);
                 user.getServidor().getServidorInformacionSalida2().writeUTF(this.servidor.getNombreUsuario());
             } catch (IOException e) {

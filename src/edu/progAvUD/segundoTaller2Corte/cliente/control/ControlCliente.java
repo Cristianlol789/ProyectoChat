@@ -11,11 +11,6 @@ public class ControlCliente {
     private ControlPrincipal controlPrincipal;
     private ThreadCliente threadCliente;
 
-    // Listados palabras censuradas
-    private static final String[] malasPalabras = {
-        "carajo", "mierda", "joder", "coño", "pendejo", "pendeja", "cabron", "cabrona", "hijo de puta", "hija de puta", "puta", "puto", "gilipollas", "imbécil", "imbecil", "malparido", "malparida", "culero", "culera", "estúpido", "estúpida", "mamón", "mamona", "boludo", "boluda", "pelotudo", "pelotuda", "zorra", "perra", "baboso", "babosa", "chinga tu madre", "pinche", "maricón", "maricona", "marica", "verga", "chingada", "chingado", "cojudo", "cojuda", "idiota", "tarado", "tarada", "tonto", "tonta", "mierdoso", "mierdosa", "culiao", "culiá", "culiador", "culiadora", "concha", "forro", "forra", "pajero", "pajera", "ñero", "ñera", "culicagado", "culicagada", "güevón", "güevona", "mamaguevo", "mamagueva", "gonorrea", "gonorreta", "careverga", "carechimba", "malnacido", "malnacida", "come mierda", "tragaleche", "pichón", "pichona", "putona", "putón", "bastardo", "bastarda", "pervertido", "pervertida", "asqueroso", "asquerosa", "cagada", "cagado", "cochina", "cochino", "infeliz", "sucia", "sucio", "machorra", "pirobo", "piroba", "loca", "loco", "petardo", "petarda", "mierdín", "mierdina", "carapicha", "carapicho", "soplapollas", "chupapijas", "sarna", "apestoso", "apestosa", "degenerado", "degenerada", "desgraciado", "desgraciada", "desubicado", "desubicada", "imbesil", "tarúpido", "tarúpida"
-    };
-
     public ControlCliente(ControlPrincipal controlPrincipal) {
         this.controlPrincipal = controlPrincipal;
     }
@@ -78,24 +73,10 @@ public class ControlCliente {
         return users;
     }
 
-    // Method to censor bad words in a message
-    private String censorMessage(String message) {
-        String[] words = message.split("\\s+");
-        for (int i = 0; i < words.length; i++) {
-            for (String badWord : malasPalabras) {
-                if (words[i].equalsIgnoreCase(badWord)) {
-                    words[i] = words[i].replaceAll(".", "*");
-                }
-            }
-        }
-        return String.join(" ", words);
-    }
-
     public void enviarMensaje(String mensaje) {
         try {
-            String censoredMessage = censorMessage(mensaje);
             cliente.getSalida().writeInt(1);
-            cliente.getSalida().writeUTF(censoredMessage);
+            cliente.getSalida().writeUTF(mensaje);
         } catch (IOException e) {
             controlPrincipal.mostrarMensajeError("error...." + e);
         }
@@ -103,10 +84,9 @@ public class ControlCliente {
 
     public void enviarMensajePrivado(String amigo, String mensaje) {
         try {
-            String censoredMessage = censorMessage(mensaje);
             cliente.getSalida().writeInt(3);
             cliente.getSalida().writeUTF(amigo);
-            cliente.getSalida().writeUTF(censoredMessage);
+            cliente.getSalida().writeUTF(mensaje);
         } catch (IOException e) {
             controlPrincipal.mostrarMensajeError("error...." + e);
         }
