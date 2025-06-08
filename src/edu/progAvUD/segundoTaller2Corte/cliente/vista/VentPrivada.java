@@ -1,0 +1,83 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package vista;
+
+// VentPrivada.java (Actualizada - Solo vista sin lógica)
+import control.ControlGrafico;
+import java.awt.*;
+import javax.swing.*;
+
+public class VentPrivada extends JFrame {
+
+    private JTextArea panMostrar;
+    private JTextField txtMensage;
+    private JButton butEnviar;
+    private String amigo;
+    private ControlGrafico controlGrafico;
+
+    public VentPrivada(ControlGrafico controlGrafico) {
+        super("Amigo");
+        this.controlGrafico = controlGrafico;
+        this.amigo = "";
+        initComponents();
+        setupLayout();
+        setupEventListeners();
+
+        setSize(300, 300);
+        setLocation(570, 90);
+    }
+
+    private void initComponents() {
+        txtMensage = new JTextField(30);
+        butEnviar = new JButton("Enviar");
+        panMostrar = new JTextArea();
+        panMostrar.setEditable(false);
+    }
+
+    private void setupLayout() {
+        JPanel panAbajo = new JPanel();
+        panAbajo.setLayout(new BorderLayout());
+        panAbajo.add(new JLabel("  Ingrese mensage a enviar:"), BorderLayout.NORTH);
+        panAbajo.add(txtMensage, BorderLayout.CENTER);
+        panAbajo.add(butEnviar, BorderLayout.EAST);
+
+        setLayout(new BorderLayout());
+        add(new JScrollPane(panMostrar), BorderLayout.CENTER);
+        add(panAbajo, BorderLayout.SOUTH);
+
+        txtMensage.requestFocus();
+    }
+
+    private void setupEventListeners() {
+        butEnviar.setActionCommand("enviar_privado");
+        butEnviar.addActionListener(controlGrafico);
+
+        txtMensage.setActionCommand("enviar_privado");
+        txtMensage.addActionListener(controlGrafico);
+    }
+
+    public void setAmigo(String ami) {
+        this.amigo = ami;
+        setTitle(ami);
+    }
+
+    public String getAmigo() {
+        return amigo;
+    }
+
+    public void mostrarMsg(String msg) {
+        panMostrar.append(msg + "\n");
+    }
+
+    public String obtenerTextoMensaje() {
+        return txtMensage.getText();
+    }
+
+    public void limpiarTextoMensaje() {
+        txtMensage.setText("");
+    }
+
+    
+}

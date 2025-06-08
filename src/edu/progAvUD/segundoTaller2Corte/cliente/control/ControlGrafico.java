@@ -1,63 +1,162 @@
-package edu.progAvUD.segundoTaller2Corte.cliente.control;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package control;
 
-import edu.progAvUD.segundoTaller2Corte.cliente.modelo.Cliente;
-import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentanaPrincipal;
+// ControlGrafico.java
+import vista.VentCliente;
+import vista.VentPrivada;
+import vista.VentanaAyuda;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Vector;
+import javax.swing.JOptionPane;
 
-/**
- *
- * @author Andres Felipe
- */
-public class ControlGrafico implements ActionListener {
+public class ControlGrafico implements ActionListener, WindowListener {
 
-    private ControlPrincipal controlPrincipal;
-    private VentanaPrincipal ventanaPrincipal;
+    private ControlCliente controlCliente;
+    private VentCliente ventanaPrincipal;
+    private VentPrivada ventanaPrivada;
+    private VentanaAyuda ventanaAyuda;
+    private Vector<String> usuariosActivos;
 
-    public ControlGrafico(ControlPrincipal controlPrincipal) {
-        this.controlPrincipal = controlPrincipal;
-        this.ventanaPrincipal = new VentanaPrincipal(this);
-        Cliente.setIpServer(ventanaPrincipal.pedirIPServer());
+    public ControlGrafico(ControlCliente controlCliente) {
+        this.controlCliente = controlCliente;
+        this.usuariosActivos = new Vector<>();
+        inicializarVentanas();
+    }
+
+    private void inicializarVentanas() {
+        ventanaPrincipal = new VentCliente(this);
+        ventanaPrivada = new VentPrivada(this);
+        ventanaPrincipal.setVisible(true);
+        ventanaPrivada.addWindowListener(this);
+    }
+
+    public void setNombreUsuario(String nombre) {
+        ventanaPrincipal.setNombreUser(nombre);
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        ventanaPrincipal.mostrarMsg(mensaje);
+    }
+
+    public void actualizarUsuariosActivos(Vector<String> usuarios) {
+        this.usuariosActivos = usuarios;
+        ventanaPrincipal.ponerActivos(usuarios);
+    }
+
+    public void agregarUsuario(String usuario) {
+        usuariosActivos.add(usuario);
+        ventanaPrincipal.ponerActivos(usuariosActivos);
+    }
+
+    public void retirarUsuario(String usuario) {
+        usuariosActivos.remove(usuario);
+        ventanaPrincipal.ponerActivos(usuariosActivos);
+    }
+
+    public void mostrarMensajePrivado(String amigo, String mensaje) {
+        ventanaPrivada.setAmigo(amigo);
+        ventanaPrivada.mostrarMsg(mensaje);
+        ventanaPrivada.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        String comand = evt.getActionCommand();
+        String comando = evt.getActionCommand();
 
-        if (comand.compareTo("help") == 0) {
-            ventanaPrincipal.mostrarPanel(ventanaPrincipal.panelAyuda);
-        }
-
-        if (comand.compareTo("Acerca") == 0) {
-            ventanaPrincipal.mostrarAcera();
-        }
-
-        if (evt.getSource() == ventanaPrincipal.panelPrincipal.butEnviar || evt.getSource() == ventanaPrincipal.panelPrincipal.txtMensage) {
-            String mensaje = ventanaPrincipal.panelPrincipal.txtMensage.getText();
-            controlPrincipal.getControlCliente().flujo(mensaje);
-            ventanaPrincipal.panelPrincipal.txtMensage.setText("");
-        } else if (evt.getSource() == ventanaPrincipal.panelPrincipal.butPrivado) {
-            int pos = ventanaPrincipal.panelPrincipal.lstActivos.getSelectedIndex();
-            if (pos >= 0) {
-                String amigo = ventanaPrincipal.panelPrincipal.lstActivos.getModel().getElementAt(pos).toString();
-                ventanaPrincipal.panelPrivado.setAmigo(amigo);
-                ventanaPrincipal.mostrarPanel(ventanaPrincipal.panelPrivado);
-            }
+        if ("help".equals(comando)) {
+            mostrarAyuda();
+        } else if ("Acerca".equals(comando)) {
+            mostrarAcercaDe();
+        } else if ("enviar_mensaje".equals(comando)) {
+            enviarMensajePrincipal();
+        } else if ("mensaje_privado".equals(comando)) {
+            abrirVentanaPrivada();
+        } else if ("enviar_privado".equals(comando)) {
+            enviarMensajePrivado();
         }
     }
 
-    // Methods to update UI panels called from ControlPrincipal / ControlCliente
-    public void mostrarMensajeEnPanelPrincipal(String mensaje) {
-        ventanaPrincipal.panelPrincipal.panMostrar.append(mensaje + "\n");
+    private void mostrarAyuda() {
+        if (ventanaAyuda == null) {
+            ventanaAyuda = new VentanaAyuda();
+        }
+        ventanaAyuda.setVisible(true);
     }
 
-    public void actualizarListaUsuarios(String[] usuarios) {
-        ventanaPrincipal.panelPrincipal.lstActivos.setListData(usuarios);
+    private void mostrarAcercaDe() {
+        JOptionPane.showMessageDialog(ventanaPrincipal,
+                "José Valdez/Javier Vargas",
+                "Desarrollado por",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void mostrarPanelPrivado(String amigo, String mensaje) {
-        ventanaPrincipal.panelPrivado.setAmigo(amigo);
-        ventanaPrincipal.panelPrivado.panMostrar.append(mensaje + "\n");
-        ventanaPrincipal.mostrarPanel(ventanaPrincipal.panelPrivado);
+    private void enviarMensajePrincipal() {
+        String mensaje = ventanaPrincipal.obtenerTextoMensaje();
+        if (!mensaje.trim().isEmpty()) {
+            controlCliente.enviarMensaje(mensaje);
+            ventanaPrincipal.limpiarTextoMensaje();
+        }
+    }
+
+    private void abrirVentanaPrivada() {
+        int posicion = ventanaPrincipal.obtenerUsuarioSeleccionado();
+        if (posicion >= 0 && posicion < usuariosActivos.size()) {
+            String amigo = usuariosActivos.get(posicion);
+            ventanaPrivada.setAmigo(amigo);
+            ventanaPrivada.setVisible(true);
+        }
+    }
+
+    private void enviarMensajePrivado() {
+        String mensaje = ventanaPrivada.obtenerTextoMensaje();
+        String amigo = ventanaPrivada.getAmigo();
+
+        if (!mensaje.trim().isEmpty() && amigo != null && !amigo.isEmpty()) {
+            String mensajeCompleto = controlCliente.getNombreCliente() + ">" + mensaje;
+            ventanaPrivada.mostrarMsg(mensajeCompleto);
+            controlCliente.enviarMensajePrivado(amigo, mensaje);
+            ventanaPrivada.limpiarTextoMensaje();
+        }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        ventanaPrivada.setVisible(false);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        
     }
 }

@@ -1,54 +1,81 @@
-package edu.progAvUD.segundoTaller2Corte.cliente.modelo;
-
-import java.io.DataInputStream;
-
-/**
- *
- * @author Andres Felipe
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
+// Cliente.java (Solo modelo con getters y setters)
+package modelo;
+
+import java.io.*;
+import java.net.*;
+
 public class Cliente {
-
-    private static String ipServer;
-    private String nombreCliente;
-    private String nombreUsuario;
+    private static String IP_SERVER;
     private DataInputStream entrada;
-
-    public Cliente(String nombreCliente, String nombreUsuario, DataInputStream entrada) {
-        this.nombreCliente = nombreCliente;
-        this.nombreUsuario = nombreUsuario;
-        this.entrada = entrada;
+    private DataOutputStream salida;
+    private DataInputStream entrada2;
+    private Socket comunication;
+    private Socket comunication2;
+    private String nombreCliente;
+    
+    public Cliente() {
+        // Constructor vacío
     }
     
-    public static String getIpServer() {
-        return ipServer;
+    // Getters y Setters
+    public static String getIP_SERVER() {
+        return IP_SERVER;
     }
-
-    public static void setIpServer(String ipServer) {
-        Cliente.ipServer = ipServer;
+    
+    public void setIP_SERVER(String IP_SERVER) {
+        Cliente.IP_SERVER = IP_SERVER;
     }
-
-    public String getNombreCliente() {
-        return nombreCliente;
-    }
-
-    public void setNombreCliente(String nombreCliente) {
-        this.nombreCliente = nombreCliente;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
-    }
-
+    
     public DataInputStream getEntrada() {
         return entrada;
     }
-
+    
     public void setEntrada(DataInputStream entrada) {
         this.entrada = entrada;
     }
-
+    
+    public DataOutputStream getSalida() {
+        return salida;
+    }
+    
+    public void setSalida(DataOutputStream salida) {
+        this.salida = salida;
+    }
+    
+    public DataInputStream getEntrada2() {
+        return entrada2;
+    }
+    
+    public void setEntrada2(DataInputStream entrada2) {
+        this.entrada2 = entrada2;
+    }
+    
+    public Socket getComunication() {
+        return comunication;
+    }
+    
+    public void setComunication(Socket comunication) {
+        this.comunication = comunication;
+    }
+    
+    public Socket getComunication2() {
+        return comunication2;
+    }
+    
+    public void setComunication2(Socket comunication2) {
+        this.comunication2 = comunication2;
+    }
+    
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+    
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
+    }
 }

@@ -1,45 +1,46 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package edu.progAvUD.segundoTaller2Corte.cliente.control;
+package control;
 
-/**
- *
- * @author Andres Felipe
- */
+import modelo.Cliente;
+import javax.swing.JOptionPane;
+import java.io.IOException;
+
 public class ControlPrincipal {
-    
     private ControlGrafico controlGrafico;
     private ControlCliente controlCliente;
-
+    
     public ControlPrincipal() {
-        controlGrafico = new ControlGrafico(this);
+        try {
+            inicializar();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al inicializar la aplicación: " + e.getMessage());
+            System.exit(1);
+        }
     }
     
-    public ControlGrafico getControlGrafico() {
-        return controlGrafico;
+    private void inicializar() throws IOException {
+        // Solicitar IP del servidor
+        String ipServer = JOptionPane.showInputDialog("Introducir IP_SERVER :", "localhost");
+        if (ipServer == null || ipServer.trim().isEmpty()) {
+            System.exit(0);
+        }
+        
+        // Crear modelo Cliente
+        Cliente cliente = new Cliente();
+        cliente.setIP_SERVER(ipServer);
+        
+        // Crear controladores
+        controlCliente = new ControlCliente(cliente);
+        controlGrafico = new ControlGrafico(controlCliente);
+        
+        // Establecer referencias cruzadas
+        controlCliente.setControlGrafico(controlGrafico);
+        
+        // Iniciar conexión
+        controlCliente.conectar();
     }
     
-    public ControlCliente getControlCliente() {
-        return controlCliente;
-    }
-    
-    public void setControlCliente(ControlCliente controlCliente) {
-        this.controlCliente = controlCliente;
-    }
-    
-    // Methods to delegate UI updates to ControlGrafico / VentanaPrincipal
-    
-    public void mostrarMensajeEnPanelPrincipal(String mensaje) {
-        controlGrafico.mostrarMensajeEnPanelPrincipal(mensaje);
-    }
-    
-    public void actualizarListaUsuarios(String[] usuarios) {
-        controlGrafico.actualizarListaUsuarios(usuarios);
-    }
-    
-    public void mostrarPanelPrivado(String amigo, String mensaje) {
-        controlGrafico.mostrarPanelPrivado(amigo, mensaje);
-    }
 }
