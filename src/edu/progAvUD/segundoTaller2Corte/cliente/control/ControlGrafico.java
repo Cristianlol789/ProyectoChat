@@ -13,7 +13,7 @@ import java.util.Vector;
 /**
  * Clase que maneja los eventos gráficos del cliente, incluyendo interacciones
  * con botones, ventanas, menús, y control de diálogos.
- * 
+ *
  * @author Cristianlol789
  */
 public class ControlGrafico implements ActionListener, WindowListener {
@@ -24,6 +24,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Constructor que inicializa el controlador gráfico y las ventanas.
+     *
      * @param controlPrincipal Referencia al controlador principal del cliente.
      */
     public ControlGrafico(ControlPrincipal controlPrincipal) {
@@ -33,7 +34,8 @@ public class ControlGrafico implements ActionListener, WindowListener {
     }
 
     /**
-     * Método que crea e inicializa las ventanas principales y agrega los listeners necesarios.
+     * Método que crea e inicializa las ventanas principales y agrega los
+     * listeners necesarios.
      */
     private void inicializarVentanas() {
         ventanaPrincipal = new VentanaPrincipal();
@@ -42,6 +44,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
         ventanaPrincipal.mostrarPanel(ventanaPrincipal.panelChatCliente);
         ventanaPrincipal.setVisible(true);
         ventanaPrincipal.dialogChatPrivado.addWindowListener(this);
+        creacionActionListenerMenu();
         creacionActionListenerPanelChatCliente();
         creacionActionListenerDialogChatPrivado();
     }
@@ -55,7 +58,8 @@ public class ControlGrafico implements ActionListener, WindowListener {
     }
 
     /**
-     * Agrega listeners a los botones y campos de texto del panel de chat principal.
+     * Agrega listeners a los botones y campos de texto del panel de chat
+     * principal.
      */
     public void creacionActionListenerPanelChatCliente() {
         ventanaPrincipal.panelChatCliente.butEnviar.addActionListener(this);
@@ -73,6 +77,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Actualiza el nombre del usuario en la interfaz gráfica.
+     *
      * @param nombre Nombre del usuario.
      */
     public void setNombreUsuario(String nombre) {
@@ -81,6 +86,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Muestra un mensaje en el área principal de chat.
+     *
      * @param mensaje Mensaje a mostrar.
      */
     public void mostrarMensaje(String mensaje) {
@@ -89,6 +95,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Actualiza la lista de usuarios activos en la interfaz.
+     *
      * @param usuarios Vector con los nombres de los usuarios activos.
      */
     public void actualizarUsuariosActivos(Vector<String> usuarios) {
@@ -98,6 +105,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Agrega un nuevo usuario a la lista de usuarios activos.
+     *
      * @param usuario Nombre del nuevo usuario.
      */
     public void agregarUsuario(String usuario) {
@@ -107,6 +115,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Retira un usuario de la lista de usuarios activos.
+     *
      * @param usuario Nombre del usuario a eliminar.
      */
     public void retirarUsuario(String usuario) {
@@ -116,6 +125,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Muestra un mensaje privado en el diálogo correspondiente.
+     *
      * @param amigo Usuario con quien se mantiene el chat privado.
      * @param mensaje Mensaje recibido.
      */
@@ -127,6 +137,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Método que captura todos los eventos de botones, menús y campos de texto.
+     *
      * @param evt Evento capturado.
      */
     @Override
@@ -143,11 +154,11 @@ public class ControlGrafico implements ActionListener, WindowListener {
                 || fuente == ventanaPrincipal.panelChatCliente.txtMensage) {
             enviarMensajePrincipal();
         }
-        if(fuente == ventanaPrincipal.panelChatCliente.butPrivado){
+        if (fuente == ventanaPrincipal.panelChatCliente.butPrivado) {
             abrirVentanaPrivada();
         }
-        if(fuente == ventanaPrincipal.dialogChatPrivado.butEnviar
-                || fuente == ventanaPrincipal.dialogChatPrivado.txtMensage){
+        if (fuente == ventanaPrincipal.dialogChatPrivado.butEnviar
+                || fuente == ventanaPrincipal.dialogChatPrivado.txtMensage) {
             enviarMensajePrivado();
         }
     }
@@ -156,12 +167,13 @@ public class ControlGrafico implements ActionListener, WindowListener {
      * Muestra el diálogo de ayuda.
      */
     private void mostrarAyuda() {
-        if (ventanaPrincipal.dialogAyuda == null) {
-            try {
+        try {
+            if (ventanaPrincipal.dialogAyuda == null) {
                 ventanaPrincipal.dialogAyuda = new DialogAyuda();
-            } catch (Exception ex) {
-                ventanaPrincipal.dialogAyuda.errorAyuda(ex);
             }
+        } catch (Exception e) {
+            // Aquí reproducimos el mismo “fallback” que tenías antes
+            ventanaPrincipal.dialogAyuda = new DialogAyuda(e.getMessage());
         }
         ventanaPrincipal.dialogAyuda.setVisible(true);
     }
@@ -213,6 +225,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Muestra un mensaje de error en la interfaz.
+     *
      * @param mensaje Mensaje de error.
      */
     public void mostrarMensajeError(String mensaje) {
@@ -221,6 +234,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Muestra un mensaje de éxito en la interfaz.
+     *
      * @param mensaje Mensaje a mostrar.
      */
     public void mostrarMensajeExito(String mensaje) {
@@ -229,6 +243,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Solicita el nombre del cliente a través de la interfaz gráfica.
+     *
      * @return Nombre ingresado.
      */
     public String pedirNombreCliente() {
@@ -237,6 +252,7 @@ public class ControlGrafico implements ActionListener, WindowListener {
 
     /**
      * Solicita la IP del servidor desde la interfaz gráfica.
+     *
      * @return IP del servidor.
      */
     public String pedirIpServer() {
@@ -244,7 +260,6 @@ public class ControlGrafico implements ActionListener, WindowListener {
     }
 
     // Métodos de la interfaz WindowListener
-
     @Override
     public void windowOpened(WindowEvent e) {
         // No se utiliza
