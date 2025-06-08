@@ -3,14 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/modelo/Servidor.java</file>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/control/ControlPrincipal.java</file>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/vista/PanelConsolaServidor.java</file>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/vista/VentanaPrincipal.java</file>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/control/LauncherServidor.java</file>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/control/ControlGrafico.java</file>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/control/ControlServidor.java</file>
-            <file>file:/C:/Users/Janus/Documents/NetBeansProjects/ChatJava/src/edu/progAvUD/segundoTaller2Corte/servidor/control/ServidorHilo.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/ProyectoChat/src/edu/progAvUD/segundoTaller2Corte/cliente/control/ControlCliente.java</file>
         </group>
     </open-files>
 </project-private>

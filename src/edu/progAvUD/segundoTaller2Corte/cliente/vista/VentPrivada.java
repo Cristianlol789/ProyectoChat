@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package vista;
+package edu.progAvUD.segundoTaller2Corte.cliente.vista;
 
 // VentPrivada.java (Actualizada - Solo vista sin lógica)
-import control.ControlGrafico;
+import edu.progAvUD.segundoTaller2Corte.cliente.control.ControlGrafico;
 import java.awt.*;
 import javax.swing.*;
 
@@ -18,6 +14,7 @@ public class VentPrivada extends JFrame {
     private ControlGrafico controlGrafico;
 
     public VentPrivada(ControlGrafico controlGrafico) {
+        
         super("Amigo");
         this.controlGrafico = controlGrafico;
         this.amigo = "";

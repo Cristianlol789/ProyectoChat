@@ -1,19 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package control;
+package edu.progAvUD.segundoTaller2Corte.cliente.control;
 
 import java.io.*;
 
 public class ThreadCliente extends Thread {
 
     private DataInputStream entrada;
-    private ControlGrafico controlGrafico;
+    private ControlCliente controlCliente;
 
-    public ThreadCliente(DataInputStream entrada, ControlGrafico controlGrafico) {
+    public ThreadCliente(DataInputStream entrada, ControlCliente controlCliente) {
         this.entrada = entrada;
-        this.controlGrafico = controlGrafico;
+        this.controlCliente = controlCliente;
     }
 
     @Override
@@ -28,25 +24,23 @@ public class ThreadCliente extends Thread {
                 switch (opcion) {
                     case 1: // mensaje enviado
                         mensaje = entrada.readUTF();
-                        System.out.println("ECO del servidor:" + mensaje);
-                        controlGrafico.mostrarMensaje(mensaje);
+                        controlCliente.mostarMensaje(mensaje);
                         break;
                     case 2: // se agrega usuario
                         mensaje = entrada.readUTF();
-                        controlGrafico.agregarUsuario(mensaje);
+                        controlCliente.agregarUsuario(mensaje);
                         break;
                     case 3: // mensaje de amigo
                         amigo = entrada.readUTF();
                         mensaje = entrada.readUTF();
-                        controlGrafico.mostrarMensajePrivado(amigo, mensaje);
-                        System.out.println("ECO del servidor:" + mensaje);
+                        controlCliente.mostrarMensajePrivado(amigo, mensaje);
                         break;
                 }
             } catch (IOException e) {
-                System.out.println("Error en la comunicación. Información para el usuario");
+                controlCliente.mostrarMensajeError("Error en la comunicación. Información para el usuario");
                 break;
             }
         }
-        System.out.println("Se desconectó el servidor");
+        controlCliente.mostrarMensajeError("Se desconectó el servidor");
     }
 }

@@ -1,15 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-// Cliente.java (Solo modelo con getters y setters)
-package modelo;
+package edu.progAvUD.segundoTaller2Corte.cliente.modelo;
 
 import java.io.*;
 import java.net.*;
 
 public class Cliente {
+    
     private static String IP_SERVER;
     private DataInputStream entrada;
     private DataOutputStream salida;
@@ -19,10 +14,8 @@ public class Cliente {
     private String nombreCliente;
     
     public Cliente() {
-        // Constructor vacío
     }
     
-    // Getters y Setters
     public static String getIP_SERVER() {
         return IP_SERVER;
     }

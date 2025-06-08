@@ -1,62 +1,59 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package control;
+package edu.progAvUD.segundoTaller2Corte.cliente.control;
 
-// ControlGrafico.java
-import vista.VentCliente;
-import vista.VentPrivada;
-import vista.VentanaAyuda;
+import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentCliente;
+import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentPrivada;
+import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentanaAyuda;
+import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentanaPrincipal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
-import javax.swing.JOptionPane;
 
 public class ControlGrafico implements ActionListener, WindowListener {
 
-    private ControlCliente controlCliente;
-    private VentCliente ventanaPrincipal;
+    private ControlPrincipal controlPrincipal;
+    private VentCliente ventanaCliente;
     private VentPrivada ventanaPrivada;
     private VentanaAyuda ventanaAyuda;
+    private VentanaPrincipal ventanaPrincipal;
     private Vector<String> usuariosActivos;
 
-    public ControlGrafico(ControlCliente controlCliente) {
-        this.controlCliente = controlCliente;
+    public ControlGrafico(ControlPrincipal controlPrincipal) {
+        this.controlPrincipal = controlPrincipal;
         this.usuariosActivos = new Vector<>();
         inicializarVentanas();
     }
 
     private void inicializarVentanas() {
-        ventanaPrincipal = new VentCliente(this);
+        ventanaCliente = new VentCliente(this);
         ventanaPrivada = new VentPrivada(this);
-        ventanaPrincipal.setVisible(true);
+        ventanaCliente.setVisible(true);
         ventanaPrivada.addWindowListener(this);
+        ventanaPrincipal = new VentanaPrincipal(this);
     }
 
     public void setNombreUsuario(String nombre) {
-        ventanaPrincipal.setNombreUser(nombre);
+        ventanaCliente.setNombreUser(nombre);
     }
 
     public void mostrarMensaje(String mensaje) {
-        ventanaPrincipal.mostrarMsg(mensaje);
+        ventanaCliente.mostrarMsg(mensaje);
     }
 
     public void actualizarUsuariosActivos(Vector<String> usuarios) {
         this.usuariosActivos = usuarios;
-        ventanaPrincipal.ponerActivos(usuarios);
+        ventanaCliente.ponerActivos(usuarios);
     }
 
     public void agregarUsuario(String usuario) {
         usuariosActivos.add(usuario);
-        ventanaPrincipal.ponerActivos(usuariosActivos);
+        ventanaCliente.ponerActivos(usuariosActivos);
     }
 
     public void retirarUsuario(String usuario) {
         usuariosActivos.remove(usuario);
-        ventanaPrincipal.ponerActivos(usuariosActivos);
+        ventanaCliente.ponerActivos(usuariosActivos);
     }
 
     public void mostrarMensajePrivado(String amigo, String mensaje) {
@@ -90,22 +87,19 @@ public class ControlGrafico implements ActionListener, WindowListener {
     }
 
     private void mostrarAcercaDe() {
-        JOptionPane.showMessageDialog(ventanaPrincipal,
-                "José Valdez/Javier Vargas",
-                "Desarrollado por",
-                JOptionPane.INFORMATION_MESSAGE);
+        ventanaPrincipal.mostrarMensajeExito("Desarrollado por: \n José Valdez \n Javier Vargas");
     }
 
     private void enviarMensajePrincipal() {
-        String mensaje = ventanaPrincipal.obtenerTextoMensaje();
+        String mensaje = ventanaCliente.obtenerTextoMensaje();
         if (!mensaje.trim().isEmpty()) {
-            controlCliente.enviarMensaje(mensaje);
-            ventanaPrincipal.limpiarTextoMensaje();
+            controlPrincipal.enviarMensaje(mensaje);
+            ventanaCliente.limpiarTextoMensaje();
         }
     }
 
     private void abrirVentanaPrivada() {
-        int posicion = ventanaPrincipal.obtenerUsuarioSeleccionado();
+        int posicion = ventanaCliente.obtenerUsuarioSeleccionado();
         if (posicion >= 0 && posicion < usuariosActivos.size()) {
             String amigo = usuariosActivos.get(posicion);
             ventanaPrivada.setAmigo(amigo);
@@ -114,17 +108,34 @@ public class ControlGrafico implements ActionListener, WindowListener {
     }
 
     private void enviarMensajePrivado() {
+        
         String mensaje = ventanaPrivada.obtenerTextoMensaje();
         String amigo = ventanaPrivada.getAmigo();
 
         if (!mensaje.trim().isEmpty() && amigo != null && !amigo.isEmpty()) {
-            String mensajeCompleto = controlCliente.getNombreCliente() + ">" + mensaje;
+            String mensajeCompleto = controlPrincipal.obtenerNombreCliente(mensaje);
             ventanaPrivada.mostrarMsg(mensajeCompleto);
-            controlCliente.enviarMensajePrivado(amigo, mensaje);
+            controlPrincipal.enviarMensajePrivado(amigo, mensaje);
             ventanaPrivada.limpiarTextoMensaje();
         }
     }
-
+    
+    public void mostrarMensajeError(String mensaje){
+        ventanaPrincipal.mostrarMensajeError(mensaje);
+    }
+    
+    public void mostrarMensajeExito(String mensaje){
+        ventanaPrincipal.mostrarMensajeExito(mensaje);
+    }
+    
+    public String pedirNombreCliente(){
+        return ventanaPrincipal.darNombreCliente();
+    }
+    
+    public String pedirIpServer(){
+        return ventanaPrincipal.darIpServidor();
+    }
+    
     @Override
     public void windowOpened(WindowEvent e) {
         
