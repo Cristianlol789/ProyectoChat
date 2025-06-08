@@ -73,8 +73,11 @@ public class ServidorHilo extends Thread {
 
             servidor.setNombreUsuario(entrada.readUTF());
             enviaUserActivos();
+            enviarListaCompletaUsuarios();
+
         } catch (IOException e) {
             e.printStackTrace();
+            return; // Si hay error en la inicialización, terminar el hilo
         }
 
         int opcion;
@@ -135,28 +138,75 @@ public class ServidorHilo extends Thread {
             }
         }
 
-        controlServidor.mostrarMensajeConsolaServidor("Se removió un usuario");
+        // AQUÍ ESTÁ LA CORRECCIÓN: Llamar a notificarDesconexion() antes de limpiar
+        controlServidor.mostrarMensajeConsolaServidor("Se removió un usuario: " + servidor.getNombreUsuario());
+
+        // Notificar a otros usuarios sobre la desconexión
+        notificarDesconexion();
+
+        // Remover de la lista de usuarios activos
         ControlServidor.getClientesActivos().removeElement(this);
+
         try {
             controlServidor.mostrarMensajeConsolaServidor("Se desconectó un usuario");
             this.servidor.getServidorCliente1().close();
+            this.servidor.getServidorCliente2().close(); // También cerrar el segundo socket
         } catch (Exception et) {
-            controlServidor.mostrarMensajeConsolaServidor("No se puede cerrar el socket");
+            controlServidor.mostrarMensajeConsolaServidor("No se puede cerrar el socket: " + et.getMessage());
         }
     }
 
     /**
-     * Notifica a todos los usuarios activos que alguien se desconectó
+     * Notifica a todos los usuarios activos que alguien se desconectó y envía
+     * la lista actualizada de usuarios
      */
     private void notificarDesconexion() {
         for (ServidorHilo user : ControlServidor.getClientesActivos()) {
             if (user != this) {
                 try {
-                    user.getServidor().getServidorInformacionSalida2().writeInt(5); // Nuevo código para desconexión
+                    // Notificar desconexión
+                    user.getServidor().getServidorInformacionSalida2().writeInt(5);
                     user.getServidor().getServidorInformacionSalida2().writeUTF(this.servidor.getNombreUsuario() + " se ha desconectado");
+
+                    // Enviar lista actualizada de usuarios (código 7)
+                    user.getServidor().getServidorInformacionSalida2().writeInt(7);
+
+                    // Contar usuarios activos (excluyendo el que se va a desconectar)
+                    int usuariosActivos = ControlServidor.getClientesActivos().size() - 1;
+                    user.getServidor().getServidorInformacionSalida2().writeInt(usuariosActivos);
+
+                    // Enviar nombres de usuarios activos
+                    for (ServidorHilo activeUser : ControlServidor.getClientesActivos()) {
+                        if (activeUser != this) { // No incluir el usuario que se desconecta
+                            user.getServidor().getServidorInformacionSalida2().writeUTF(
+                                    activeUser.getServidor().getNombreUsuario()
+                            );
+                        }
+                    }
+
                 } catch (IOException e) {
                     controlServidor.mostrarMensajeConsolaServidor("Error notificando desconexión: " + e.getMessage());
                 }
+            }
+        }
+    }
+
+    /**
+     * Envía la lista completa de usuarios activos a todos los clientes
+     */
+    private void enviarListaCompletaUsuarios() {
+        for (ServidorHilo user : ControlServidor.getClientesActivos()) {
+            try {
+                user.getServidor().getServidorInformacionSalida2().writeInt(7); // Código para lista completa
+                user.getServidor().getServidorInformacionSalida2().writeInt(ControlServidor.getClientesActivos().size());
+
+                for (ServidorHilo activeUser : ControlServidor.getClientesActivos()) {
+                    user.getServidor().getServidorInformacionSalida2().writeUTF(
+                            activeUser.getServidor().getNombreUsuario()
+                    );
+                }
+            } catch (IOException e) {
+                controlServidor.mostrarMensajeConsolaServidor("Error enviando lista de usuarios: " + e.getMessage());
             }
         }
     }
@@ -303,6 +353,8 @@ public class ServidorHilo extends Thread {
         } catch (IOException e) {
             controlServidor.mostrarMensajeConsolaServidor("Error enviando mensaje de baneo: " + e.getMessage());
         } finally {
+
+            notificarDesconexion();
             ControlServidor.getClientesActivos().removeElement(this);
 
             try {

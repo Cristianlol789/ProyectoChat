@@ -15,14 +15,6 @@ public class ControlCliente {
         this.controlPrincipal = controlPrincipal;
     }
 
-    public void crearCliente() {
-        cliente = new Cliente();
-    }
-
-    public void actualizarIP(String ipServer) {
-        cliente.setIP_SERVER(ipServer);
-    }
-
     public void conectar() throws IOException {
         try {
             // Crear conexiones
@@ -92,10 +84,6 @@ public class ControlCliente {
         }
     }
 
-    public String getNombreCliente() {
-        return cliente.getNombreCliente();
-    }
-
     public void cerrarConexiones() {
         try {
             if (cliente.getEntrada() != null) {
@@ -118,6 +106,24 @@ public class ControlCliente {
         }
     }
 
+    /**
+     * Solicita al servidor una actualización de la lista de usuarios activos
+     */
+    public void actualizarListaUsuarios() {
+        try {
+            cliente.getSalida().writeInt(2); // Solicitar lista de usuarios
+        } catch (IOException e) {
+            controlPrincipal.mostrarMensajeError("Error solicitando actualización de usuarios: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Actualiza completamente la lista de usuarios en la interfaz
+     */
+    public void actualizarListaCompletaUsuarios(java.util.Vector<String> usuarios) {
+        controlPrincipal.actualizarUsuariosActivos(usuarios);
+    }
+
     public void mostarMensaje(String mensaje) {
         controlPrincipal.mostarMensaje(mensaje);
     }
@@ -132,5 +138,17 @@ public class ControlCliente {
 
     public void mostrarMensajeError(String mensaje) {
         controlPrincipal.mostrarMensajeError(mensaje);
+    }
+
+    public String getNombreCliente() {
+        return cliente.getNombreCliente();
+    }
+
+    public void crearCliente() {
+        cliente = new Cliente();
+    }
+
+    public void actualizarIP(String ipServer) {
+        cliente.setIP_SERVER(ipServer);
     }
 }
