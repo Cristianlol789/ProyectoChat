@@ -1,26 +1,39 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package edu.progAvUD.segundoTaller2Corte.cliente.vista;
 
-// VentPrivada.java (Actualizada - Solo vista sin lógica)
 import edu.progAvUD.segundoTaller2Corte.cliente.control.ControlGrafico;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
-public class VentPrivada extends JFrame {
-
-    private JTextArea panMostrar;
-    private JTextField txtMensage;
-    private JButton butEnviar;
+/**
+ *
+ * @author and
+ */
+public class DialogChatPrivado extends JDialog {
+    
+    public JTextArea panMostrar;
+    public JTextField txtMensage;
+    public JButton butEnviar;
     private String amigo;
-    private ControlGrafico controlGrafico;
+//    private ControlGrafico controlGrafico;
 
-    public VentPrivada(ControlGrafico controlGrafico) {
+    public DialogChatPrivado(/*ControlGrafico controlGrafico*/) {
         
-        super("Amigo");
-        this.controlGrafico = controlGrafico;
+        //super("Amigo");
+        //this.controlGrafico = controlGrafico;
         this.amigo = "";
         initComponents();
         setupLayout();
-        setupEventListeners();
+        //setupEventListeners();
 
         setSize(300, 300);
         setLocation(570, 90);
@@ -47,14 +60,14 @@ public class VentPrivada extends JFrame {
         txtMensage.requestFocus();
     }
 
-    private void setupEventListeners() {
-        butEnviar.setActionCommand("enviar_privado");
-        butEnviar.addActionListener(controlGrafico);
-
-        txtMensage.setActionCommand("enviar_privado");
-        txtMensage.addActionListener(controlGrafico);
-    }
-
+//    private void setupEventListeners() {
+//        butEnviar.setActionCommand("enviar_privado");
+//        butEnviar.addActionListener(controlGrafico);
+//
+//        txtMensage.setActionCommand("enviar_privado");
+//        txtMensage.addActionListener(controlGrafico);
+//    }
+//
     public void setAmigo(String ami) {
         this.amigo = ami;
         setTitle(ami);
@@ -75,6 +88,5 @@ public class VentPrivada extends JFrame {
     public void limpiarTextoMensaje() {
         txtMensage.setText("");
     }
-
     
 }

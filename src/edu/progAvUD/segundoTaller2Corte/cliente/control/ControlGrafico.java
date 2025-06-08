@@ -1,8 +1,8 @@
 package edu.progAvUD.segundoTaller2Corte.cliente.control;
 
-import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentCliente;
-import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentPrivada;
-import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentanaAyuda;
+import edu.progAvUD.segundoTaller2Corte.cliente.vista.DialogAyuda;
+import edu.progAvUD.segundoTaller2Corte.cliente.vista.DialogChatPrivado;
+import edu.progAvUD.segundoTaller2Corte.cliente.vista.PanelChatCliente;
 import edu.progAvUD.segundoTaller2Corte.cliente.vista.VentanaPrincipal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,9 +13,9 @@ import java.util.Vector;
 public class ControlGrafico implements ActionListener, WindowListener {
 
     private ControlPrincipal controlPrincipal;
-    private VentCliente ventanaCliente;
-    private VentPrivada ventanaPrivada;
-    private VentanaAyuda ventanaAyuda;
+//    private VentCliente ventanaCliente;
+//    private VentPrivada ventanaPrivada;
+//    private VentanaAyuda ventanaAyuda;
     private VentanaPrincipal ventanaPrincipal;
     private Vector<String> usuariosActivos;
 
@@ -26,64 +26,110 @@ public class ControlGrafico implements ActionListener, WindowListener {
     }
 
     private void inicializarVentanas() {
-        ventanaCliente = new VentCliente(this);
-        ventanaPrivada = new VentPrivada(this);
-        ventanaCliente.setVisible(true);
-        ventanaPrivada.addWindowListener(this);
-        ventanaPrincipal = new VentanaPrincipal(this);
+        ventanaPrincipal = new VentanaPrincipal();
+        ventanaPrincipal.panelChatCliente = new PanelChatCliente();
+        ventanaPrincipal.dialogChatPrivado = new DialogChatPrivado();
+        ventanaPrincipal.mostrarPanel(ventanaPrincipal.panelChatCliente);
+        ventanaPrincipal.setVisible(true);
+//        ventanaCliente = new VentCliente(this);
+//        ventanaPrivada = new VentPrivada(this);
+//        ventanaCliente.setVisible(true);
+        ventanaPrincipal.dialogChatPrivado.addWindowListener(this);
+        creacionActionListenerPanelChatCliente();
+        creacionActionListenerDialogChatPrivado();
+    }
+
+    public void creacionActionListenerMenu() {
+        ventanaPrincipal.jMenuItemAyuda.addActionListener(this);
+        ventanaPrincipal.jMenuItemCreditos.addActionListener(this);
+    }
+
+    public void creacionActionListenerPanelChatCliente() {
+        ventanaPrincipal.panelChatCliente.butEnviar.addActionListener(this);
+        ventanaPrincipal.panelChatCliente.txtMensage.addActionListener(this);
+        ventanaPrincipal.panelChatCliente.butPrivado.addActionListener(this);
+    }
+
+    public void creacionActionListenerDialogChatPrivado() {
+        ventanaPrincipal.dialogChatPrivado.butEnviar.addActionListener(this);
+        ventanaPrincipal.dialogChatPrivado.txtMensage.addActionListener(this);
     }
 
     public void setNombreUsuario(String nombre) {
-        ventanaCliente.setNombreUser(nombre);
+        ventanaPrincipal.panelChatCliente.setNombreUser(nombre);
     }
 
     public void mostrarMensaje(String mensaje) {
-        ventanaCliente.mostrarMsg(mensaje);
+        ventanaPrincipal.panelChatCliente.mostrarMsg(mensaje);
     }
 
     public void actualizarUsuariosActivos(Vector<String> usuarios) {
         this.usuariosActivos = usuarios;
-        ventanaCliente.ponerActivos(usuarios);
+        ventanaPrincipal.panelChatCliente.ponerActivos(usuarios);
     }
 
     public void agregarUsuario(String usuario) {
         usuariosActivos.add(usuario);
-        ventanaCliente.ponerActivos(usuariosActivos);
+        ventanaPrincipal.panelChatCliente.ponerActivos(usuariosActivos);
     }
 
     public void retirarUsuario(String usuario) {
         usuariosActivos.remove(usuario);
-        ventanaCliente.ponerActivos(usuariosActivos);
+        ventanaPrincipal.panelChatCliente.ponerActivos(usuariosActivos);
     }
 
     public void mostrarMensajePrivado(String amigo, String mensaje) {
-        ventanaPrivada.setAmigo(amigo);
-        ventanaPrivada.mostrarMsg(mensaje);
-        ventanaPrivada.setVisible(true);
+        ventanaPrincipal.dialogChatPrivado.setAmigo(amigo);
+        ventanaPrincipal.dialogChatPrivado.mostrarMsg(mensaje);
+        ventanaPrincipal.dialogChatPrivado.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        String comando = evt.getActionCommand();
+        Object fuente = evt.getSource();
 
-        if ("help".equals(comando)) {
+        if (fuente == ventanaPrincipal.jMenuItemAyuda) {
             mostrarAyuda();
-        } else if ("Acerca".equals(comando)) {
+        }
+        if (fuente == ventanaPrincipal.jMenuItemCreditos) {
             mostrarAcercaDe();
-        } else if ("enviar_mensaje".equals(comando)) {
+        }
+        if (fuente == ventanaPrincipal.panelChatCliente.butEnviar
+                || fuente == ventanaPrincipal.panelChatCliente.txtMensage) {
             enviarMensajePrincipal();
-        } else if ("mensaje_privado".equals(comando)) {
+        }
+        if(fuente == ventanaPrincipal.panelChatCliente.butPrivado){
             abrirVentanaPrivada();
-        } else if ("enviar_privado".equals(comando)) {
+        }
+        if(fuente == ventanaPrincipal.dialogChatPrivado.butEnviar
+                || fuente == ventanaPrincipal.dialogChatPrivado.txtMensage){
             enviarMensajePrivado();
         }
+
+//        String comando = evt.getActionCommand();
+//
+//        if ("help".equals(comando)) {
+//            mostrarAyuda();
+//        } else if ("Acerca".equals(comando)) {
+//            mostrarAcercaDe();
+//        } else if ("enviar_mensaje".equals(comando)) {
+//            enviarMensajePrincipal();
+//        } else if ("mensaje_privado".equals(comando)) {
+//            abrirVentanaPrivada();
+//        } else if ("enviar_privado".equals(comando)) {
+//            enviarMensajePrivado();
+//        }
     }
 
     private void mostrarAyuda() {
-        if (ventanaAyuda == null) {
-            ventanaAyuda = new VentanaAyuda();
+        if (ventanaPrincipal.dialogAyuda == null) {
+            try {
+                ventanaPrincipal.dialogAyuda = new DialogAyuda();
+            } catch (Exception ex) {
+                ventanaPrincipal.dialogAyuda.errorAyuda(ex);
+            }
         }
-        ventanaAyuda.setVisible(true);
+        ventanaPrincipal.dialogAyuda.setVisible(true);
     }
 
     private void mostrarAcercaDe() {
@@ -91,83 +137,83 @@ public class ControlGrafico implements ActionListener, WindowListener {
     }
 
     private void enviarMensajePrincipal() {
-        String mensaje = ventanaCliente.obtenerTextoMensaje();
+        String mensaje = ventanaPrincipal.panelChatCliente.obtenerTextoMensaje();
         if (!mensaje.trim().isEmpty()) {
             controlPrincipal.enviarMensaje(mensaje);
-            ventanaCliente.limpiarTextoMensaje();
+            ventanaPrincipal.panelChatCliente.limpiarTextoMensaje();
         }
     }
 
     private void abrirVentanaPrivada() {
-        int posicion = ventanaCliente.obtenerUsuarioSeleccionado();
+        int posicion = ventanaPrincipal.panelChatCliente.obtenerUsuarioSeleccionado();
         if (posicion >= 0 && posicion < usuariosActivos.size()) {
             String amigo = usuariosActivos.get(posicion);
-            ventanaPrivada.setAmigo(amigo);
-            ventanaPrivada.setVisible(true);
+            ventanaPrincipal.dialogChatPrivado.setAmigo(amigo);
+            ventanaPrincipal.dialogChatPrivado.setVisible(true);
         }
     }
 
     private void enviarMensajePrivado() {
-        
-        String mensaje = ventanaPrivada.obtenerTextoMensaje();
-        String amigo = ventanaPrivada.getAmigo();
+
+        String mensaje = ventanaPrincipal.dialogChatPrivado.obtenerTextoMensaje();
+        String amigo = ventanaPrincipal.dialogChatPrivado.getAmigo();
 
         if (!mensaje.trim().isEmpty() && amigo != null && !amigo.isEmpty()) {
             String mensajeCompleto = controlPrincipal.obtenerNombreCliente(mensaje);
-            ventanaPrivada.mostrarMsg(mensajeCompleto);
+            ventanaPrincipal.dialogChatPrivado.mostrarMsg(mensajeCompleto);
             controlPrincipal.enviarMensajePrivado(amigo, mensaje);
-            ventanaPrivada.limpiarTextoMensaje();
+            ventanaPrincipal.dialogChatPrivado.limpiarTextoMensaje();
         }
     }
-    
-    public void mostrarMensajeError(String mensaje){
+
+    public void mostrarMensajeError(String mensaje) {
         ventanaPrincipal.mostrarMensajeError(mensaje);
     }
-    
-    public void mostrarMensajeExito(String mensaje){
+
+    public void mostrarMensajeExito(String mensaje) {
         ventanaPrincipal.mostrarMensajeExito(mensaje);
     }
-    
-    public String pedirNombreCliente(){
+
+    public String pedirNombreCliente() {
         return ventanaPrincipal.darNombreCliente();
     }
-    
-    public String pedirIpServer(){
+
+    public String pedirIpServer() {
         return ventanaPrincipal.darIpServidor();
     }
-    
+
     @Override
     public void windowOpened(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        ventanaPrivada.setVisible(false);
+        ventanaPrincipal.dialogChatPrivado.setVisible(false);
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        
+
     }
 }

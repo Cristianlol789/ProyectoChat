@@ -10,14 +10,23 @@ import javax.swing.JPanel;
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
-    private ControlGrafico controlGrafico;
+    //private ControlGrafico controlGrafico;
+    public DialogAyuda dialogAyuda;
+    public PanelChatCliente panelChatCliente;
+    public DialogChatPrivado dialogChatPrivado;
     
     /**
      * Creates new form VentanaPrincipal
      */
-    public VentanaPrincipal(ControlGrafico controlGrafico) {
-        this.controlGrafico = controlGrafico;
+    public VentanaPrincipal(/*ControlGrafico controlGrafico*/) {
+        //this.controlGrafico = controlGrafico;
         initComponents();
+    }
+    
+    public void incializarVentana() throws Exception {
+        this.panelChatCliente = new PanelChatCliente();
+        this.dialogAyuda = new DialogAyuda();
+        this.dialogChatPrivado = new DialogChatPrivado();
     }
     
     /**
@@ -69,7 +78,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItemCreditos = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItemAyuda = new javax.swing.JMenuItem();
+
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jMenu1.setText("Acerca de");
+
+        jMenuItemCreditos.setText("Creditos");
+        jMenu1.add(jMenuItemCreditos);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Ayuda");
+
+        jMenuItemAyuda.setText("Ayuda");
+        jMenu2.add(jMenuItemAyuda);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,7 +114,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 274, Short.MAX_VALUE)
         );
 
         pack();
@@ -88,5 +123,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    public javax.swing.JMenuItem jMenuItemAyuda;
+    public javax.swing.JMenuItem jMenuItemCreditos;
     // End of variables declaration//GEN-END:variables
 }
