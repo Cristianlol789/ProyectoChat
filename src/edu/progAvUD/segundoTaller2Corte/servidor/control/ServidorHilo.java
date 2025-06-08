@@ -340,6 +340,11 @@ public class ServidorHilo extends Thread {
         return message; // Retornar mensaje original
     }
 
+    /**
+     * Se encarga de banear al usuario en caso de incumplir alguna norma
+     *
+     * @param razon es la razon por la cual se procedio al baneo;
+     */
     private void banearUsuario(String razon) {
         controlServidor.mostrarMensajeConsolaServidor("Usuario baneado: " + servidor.getNombreUsuario() + " - Razón: " + razon);
 

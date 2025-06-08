@@ -1,28 +1,56 @@
 package edu.progAvUD.segundoTaller2Corte.cliente.vista;
 
-import edu.progAvUD.segundoTaller2Corte.cliente.control.ControlGrafico;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- *
- * @author Cristianlol789
+ * Clase VentanaPrincipal
+ * 
+ * Esta clase extiende JFrame y representa la ventana principal de la aplicación cliente.
+ * Contiene referencias a diálogos y paneles que forman parte de la interfaz gráfica,
+ * tales como el panel principal de chat, el diálogo de ayuda y el diálogo para chat privado.
+ * 
+ * Además, ofrece métodos para mostrar mensajes al usuario y solicitar datos básicos
+ * como el nombre del cliente y la IP del servidor.
+ * 
+ * Autor: Cristianlol789
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
-    //private ControlGrafico controlGrafico;
+    // Referencia al controlador gráfico (comentado en este código)
+//    private ControlGrafico controlGrafico;
+
+    /**
+     * Diálogo que muestra la ayuda de la aplicación.
+     */
     public DialogAyuda dialogAyuda;
+
+    /**
+     * Panel principal donde se muestra la conversación del chat y lista de usuarios.
+     */
     public PanelChatCliente panelChatCliente;
+
+    /**
+     * Diálogo para manejar conversaciones privadas con otros usuarios.
+     */
     public DialogChatPrivado dialogChatPrivado;
     
     /**
-     * Creates new form VentanaPrincipal
+     * Constructor de la ventana principal.
+     * Inicializa los componentes gráficos de la ventana.
+     * 
+     * @param controlGrafico Controlador gráfico (comentado en este código)
      */
     public VentanaPrincipal(/*ControlGrafico controlGrafico*/) {
         //this.controlGrafico = controlGrafico;
         initComponents();
     }
     
+    /**
+     * Inicializa los diálogos y paneles que se utilizan en la ventana.
+     * 
+     * @throws Exception En caso de error al crear alguno de los diálogos.
+     */
     public void incializarVentana() throws Exception {
         this.panelChatCliente = new PanelChatCliente();
         this.dialogAyuda = new DialogAyuda();
@@ -30,36 +58,48 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     
     /**
-     * Muestra un cuadro de diálogo con un mensaje de éxito.
-     *
-     * @param mensaje Mensaje a mostrar al usuario.
+     * Muestra un cuadro de diálogo informativo para notificar al usuario un mensaje de éxito.
+     * 
+     * @param mensaje Mensaje que se desea mostrar.
      */
     public void mostrarMensajeExito(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
-     * Muestra un cuadro de diálogo con un mensaje de error.
-     *
-     * @param mensaje Mensaje a mostrar al usuario.
+     * Muestra un cuadro de diálogo para notificar al usuario un mensaje de error.
+     * 
+     * @param mensaje Mensaje de error que se desea mostrar.
      */
     public void mostrarMensajeError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
+    /**
+     * Solicita al usuario que introduzca su nombre o nick mediante un cuadro de diálogo.
+     * 
+     * @return Cadena con el nombre del cliente introducido por el usuario.
+     */
     public String darNombreCliente(){
         return JOptionPane.showInputDialog("Introducir Nick :");
     }
     
+    /**
+     * Solicita al usuario que introduzca la IP del servidor mediante un cuadro de diálogo.
+     * El valor por defecto que aparece es "localhost".
+     * 
+     * @return Cadena con la IP del servidor introducida por el usuario.
+     */
     public String darIpServidor(){
         return JOptionPane.showInputDialog("Introducir IP_SERVER :", "localhost");
     }
 
     /**
-     * Cambia el panel visible en la ventana principal.
-     * Ajusta el tamaño, centra la ventana en pantalla y actualiza la interfaz gráfica.
-     *
-     * @param panel Panel que se desea mostrar en la ventana principal.
+     * Cambia el panel visible dentro de la ventana principal.
+     * Ajusta el tamaño de la ventana al contenido del panel, centra la ventana en pantalla,
+     * y refresca la interfaz para reflejar el cambio.
+     * 
+     * @param panel Panel que se desea mostrar como contenido principal.
      */
     public void mostrarPanel(JPanel panel) {
         setContentPane(panel);

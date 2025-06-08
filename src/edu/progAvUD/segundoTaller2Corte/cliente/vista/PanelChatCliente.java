@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edu.progAvUD.segundoTaller2Corte.cliente.vista;
 
 import java.awt.BorderLayout;
@@ -11,9 +7,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -21,36 +14,74 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
- *
- * @author and
+ * Clase PanelChatCliente
+ * 
+ * Representa el panel principal de la interfaz gráfica del cliente en el chat.
+ * Contiene componentes para mostrar mensajes, ingresar texto para enviar,
+ * mostrar la lista de usuarios activos, y botones para enviar mensajes
+ * y abrir chats privados.
+ * 
+ * Este panel organiza sus elementos en una estructura dividida que permite
+ * visualizar la lista de usuarios a la izquierda y la conversación junto con
+ * el campo de texto y botones a la derecha.
+ * 
+ * Autor: and
  */
 public class PanelChatCliente extends JPanel {
 
+    /**
+     * Área de texto donde se muestran los mensajes recibidos y enviados.
+     * No es editable para evitar modificaciones accidentales.
+     */
     public JTextArea panMostrar;
+
+    /**
+     * Campo de texto donde el usuario escribe el mensaje que desea enviar.
+     */
     public JTextField txtMensage;
+
+    /**
+     * Botón para enviar el mensaje escrito en el campo de texto.
+     */
     public JButton butEnviar;
+
+    /**
+     * Etiqueta que muestra el nombre del usuario actualmente conectado.
+     */
     public JLabel lblNomUser;
+
+    /**
+     * Lista gráfica que muestra los usuarios activos en el chat.
+     */
     public JList<String> lstActivos;
+
+    /**
+     * Botón para iniciar una conversación privada con un usuario seleccionado.
+     */
     public JButton butPrivado;
-//    public JMenuBar barraMenu;
-//    public JMenu JMAyuda;
-//    public JMenuItem help;
-//    public JMenu JMAcerca;
-    //public JMenuItem acercaD;
-    //private ControlGrafico controlGrafico;
 
-    public PanelChatCliente(/*ControlGrafico controlGrafico*/) {
-//        super("Cliente Chat");
-//        this.controlGrafico = controlGrafico;
-        initComponents();
-        setupLayout();
-//        setupEventListeners();
+    /**
+     * Constructor de la clase PanelChatCliente.
+     * Inicializa los componentes gráficos y establece la organización del panel.
+     * 
+     * Configura tamaño y posición, aunque estos pueden ser ignorados en un contenedor padre.
+     * El constructor también tiene código comentado para agregar listeners y barra de menú.
+     */
+    public PanelChatCliente() {
+        
+        initComponents();  // Crear los componentes gráficos
+        setupLayout();     // Organizar los componentes dentro del panel
 
-        setSize(450, 430);
-        setLocation(120, 90);
+        setSize(450, 430);  // Tamaño del panel
+        setLocation(120, 90); // Posición del panel (puede no usarse dependiendo del layout padre)
 //        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /**
+     * Método que crea y configura los componentes gráficos: campo de texto,
+     * botones, etiquetas, área de texto para mostrar mensajes y lista de usuarios activos.
+     * También se personalizan colores y bordes para una mejor apariencia visual.
+     */
     private void initComponents() {
         txtMensage = new JTextField(30);
         butEnviar = new JButton("Enviar");
@@ -65,22 +96,18 @@ public class PanelChatCliente extends JPanel {
         lstActivos = new JList<>();
         butPrivado = new JButton("Privado");
 
-        // Menu
-//        barraMenu = new JMenuBar();
-//        JMAyuda = new JMenu("Ayuda");
-//        help = new JMenuItem("Ayuda");
-//        help.setActionCommand("help");
-//
-//        JMAcerca = new JMenu("Acerca de");
-//        acercaD = new JMenuItem("Creditos");
-//        acercaD.setActionCommand("Acerca");
-//
-//        JMAyuda.add(help);
-//        JMAcerca.add(acercaD);
-//        barraMenu.add(JMAcerca);
-//        barraMenu.add(JMAyuda);
     }
 
+    /**
+     * Método que organiza los componentes en el panel utilizando un BorderLayout
+     * y un JSplitPane para dividir la interfaz en dos secciones:
+     * 
+     * - Izquierda: lista de usuarios activos y botón para iniciar chats privados.
+     * - Derecha: etiqueta con nombre de usuario, área para mostrar mensajes y
+     *   panel inferior con campo para escribir mensajes y botón para enviar.
+     * 
+     * El campo de texto para ingresar mensajes recibe el foco para facilitar la escritura.
+     */
     private void setupLayout() {
         JPanel panAbajo = new JPanel();
         panAbajo.setLayout(new BorderLayout());
@@ -113,39 +140,55 @@ public class PanelChatCliente extends JPanel {
         txtMensage.requestFocus();
     }
 
-//    private void setupEventListeners() {
-//        butEnviar.setActionCommand("enviar_mensaje");
-//        butEnviar.addActionListener(controlGrafico);
-//
-//        txtMensage.setActionCommand("enviar_mensaje");
-//        txtMensage.addActionListener(controlGrafico);
-//
-//        butPrivado.setActionCommand("mensaje_privado");
-//        butPrivado.addActionListener(controlGrafico);
-//
-//        help.addActionListener(controlGrafico);
-//        acercaD.addActionListener(controlGrafico);
-//    }
+    /**
+     * Actualiza la etiqueta que muestra el nombre del usuario conectado.
+     * 
+     * @param user Nombre del usuario a mostrar.
+     */
     public void setNombreUser(String user) {
         lblNomUser.setText("Usuario " + user);
     }
 
+    /**
+     * Agrega un mensaje al área de texto para mostrarlo en la conversación.
+     * El mensaje se añade en una línea nueva.
+     * 
+     * @param msg Mensaje a mostrar.
+     */
     public void mostrarMsg(String msg) {
         panMostrar.append(msg + "\n");
     }
 
+    /**
+     * Actualiza la lista gráfica de usuarios activos con los datos recibidos.
+     * 
+     * @param datos Vector con los nombres de los usuarios activos.
+     */
     public void ponerActivos(Vector<String> datos) {
         lstActivos.setListData(datos);
     }
 
+    /**
+     * Obtiene el texto actual escrito en el campo para enviar mensajes.
+     * 
+     * @return Texto ingresado por el usuario.
+     */
     public String obtenerTextoMensaje() {
         return txtMensage.getText();
     }
 
+    /**
+     * Limpia el campo de texto para que el usuario pueda escribir un nuevo mensaje.
+     */
     public void limpiarTextoMensaje() {
         txtMensage.setText("");
     }
 
+    /**
+     * Obtiene el índice del usuario actualmente seleccionado en la lista de usuarios activos.
+     * 
+     * @return Índice del usuario seleccionado o -1 si no hay selección.
+     */
     public int obtenerUsuarioSeleccionado() {
         return lstActivos.getSelectedIndex();
 
