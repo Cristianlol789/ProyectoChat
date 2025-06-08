@@ -74,6 +74,7 @@ public class ThreadCliente extends Thread {
                 
             } catch (IOException e) {
                 controlCliente.mostrarMensajeError("Error en la comunicación con el servidor");
+                System.exit(0);
                 break;
             }
         }
